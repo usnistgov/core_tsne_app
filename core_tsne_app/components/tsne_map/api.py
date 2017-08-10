@@ -17,7 +17,7 @@ def upsert(tsne_map):
     return tsne_map.save()
 
 
-def get_last():
+def get_last(user):
     """ Return last T-SNE map.
 
     Returns:
@@ -26,9 +26,10 @@ def get_last():
     # Get latest T-SNE map
     tsne_map = TSNEMap.get_last()
     # Get ids of accessible data
-    # FIXME: only get accessible data
-    # accessible_data = map(str, data_api.get_accessible_data().values_list('id'))
-    # filtered_csv_content = filter_rows(csv_content, column_index=-1, allowed_values=accessible_data)
+    accessible_data = map(str, data_api.execute_query({}, user).values_list('id'))
+    # read csv content
     csv_content = tsne_map.file.read()
+    # filter csv content, keeping only accessible data
+    filtered_csv_content = filter_rows(csv_content, column_index=-1, allowed_values=accessible_data)
 
-    return csv_content
+    return filtered_csv_content

@@ -23,7 +23,7 @@ def download_latest(request):
     """
     try:
         # get T-SNE map
-        tsne_map = tsne_map_api.get_last()
+        tsne_map = tsne_map_api.get_last(request.user)
         # return csv file
         return get_file_http_response(tsne_map, 'tsne_app', extension='csv')
     except exceptions.DoesNotExist as e:

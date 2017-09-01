@@ -3,6 +3,24 @@
 import csv
 
 
+def check_headers(csv_content, expected_headers):
+    """ Check that CSV contains expected headers
+
+    Args:
+        csv_content:
+        expected_headers:
+
+    Returns:
+
+    """
+    # create csv reader
+    csv_reader = csv.reader(csv_content.splitlines())
+    # get first row: headers
+    csv_headers = csv_reader.next()
+
+    return csv_headers == expected_headers
+
+
 def filter_rows(csv_content, column_index, allowed_values):
     """Filter rows of a csv string
 

@@ -1,5 +1,9 @@
 """T-SNE application admin views
 """
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponseRedirect
+
+from core_main_app.commons.exceptions import ModelError
 from core_main_app.utils.rendering import admin_render
 from core_tsne_app.components.tsne_map.models import TSNEMap
 from core_tsne_app.components.tsne_map import api as tsne_api
@@ -26,8 +30,11 @@ def upload_map(request):
 
         if form.is_valid():
             tsne_map = TSNEMap(file=request.FILES['file'])
-            tsne_api.upsert(tsne_map)
-            # TODO: redirect
+            try:
+                tsne_api.upsert(tsne_map)
+                return HttpResponseRedirect(reverse("admin:core_main_app_admin_home"))
+            except ModelError, e:
+                form.add_error('file', e.message)
     # method is GET
     else:
         # render the form to upload a template
